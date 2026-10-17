@@ -7,6 +7,9 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
 
+# ~512 bge-small tokens at ~4.5 chars/token (measured on this corpus by scripts/check_tokens.py)
+MAX_SECTION_CHARS = 2200
+
 RAW_DIR = Path("data/raw")
 OUT_PATH = Path("data/chunks.jsonl")
 GOVUK = "https://www.gov.uk"
@@ -39,6 +42,39 @@ def element_to_text(el: Tag) -> str:
             return "\n".join(rows)
     return el.get_text(" ", strip=True)
 
+def new_section(heading: str | None, anchor: str | None) -> dict:
+    """A section (under one <h2>) is a list of sub-blocks, each starting at an <h3>."""
+    return {
+        "heading": heading,
+        "anchor": anchor,
+        "subs": [{
+            "heading": None,
+            "anchor": None,
+            "lines": []
+        }]
+    }
+
+def has_text(section: dict) -> bool:
+    return any(sub["lines"] for sub in section["subs"])
+
+def section_text(section: dict) -> str:
+    lines = []
+    for sub in section["subs"]:
+        if sub["heading"]:
+            lines.append(sub["heading"])
+        lines.extend(sub["lines"])
+    return "\n".join(lines)
+
+def make_chunk(guide_slug: str, part_slug: str, part_url: str, 
+               path: list[str], anchor: str | None, body: str) -> Chunk:
+    return Chunk(
+        chunk_id=f"{guide_slug}/{part_slug}#{anchor or 'intro'}",
+        guide=guide_slug,
+        title_path=" > ".join(path),
+        url=f"{part_url}#{anchor}" if anchor else part_url,
+        body=body,
+    )
+
 def split_part(guide_slug: str, guide_title: str, part: dict) -> list[Chunk]:
     soup = BeautifulSoup(part["body"], "html.parser")
     for button in soup.select("a.govuk-button"): # drop "Start now" buttons
@@ -47,39 +83,61 @@ def split_part(guide_slug: str, guide_title: str, part: dict) -> list[Chunk]:
     part_title = part["title"].strip()
     part_url = f"{GOVUK}/{guide_slug}/{part['slug']}"
 
-    # Each section = text under one <h2>; text before the first <h2> is th eintro.
+    # Each section = text under one <h2>; text before the first <h2> is the intro.
     sections = []
-    current = {"heading": None, "anchor": None, "lines": []}
+    current = new_section(None, None)
     for el in soup.children:
         if not isinstance(el, Tag):
             continue # skip bare whitespaces between tags
         if el.name == "h2":
-            if current["lines"]:
+            if has_text(current):
                 sections.append(current)
-            current = {
-                "heading": el.get_text(" ", strip=True), 
+            current = new_section(el.get_text(" ", strip=True), el.get("id"))
+            continue
+        if el.name == "h3":
+            current["subs"].append({
+                "heading": el.get_text(" ", strip=True),
                 "anchor": el.get("id"),
                 "lines": []
-            }
-
+            })
             continue
         text = element_to_text(el)
         if text:
-            current["lines"].append(text)
-    if current["lines"]:
+            current["subs"][-1]["lines"].append(text)
+    if has_text(current):
         sections.append(current)
 
     chunks = []
     for s in sections:
-        path = [guide_title, part_title] + ([s["heading"]] if s["heading"] else [])
-        anchor = s["anchor"]
-        chunks.append(Chunk(
-            chunk_id=f"{guide_slug}/{part['slug']}#{anchor or 'intro'}",
-            guide=guide_slug,
-            title_path=" > ".join(path),
-            url=f"{part_url}#{anchor}" if anchor else part_url,
-            body=clean("\n".join(s["lines"])),
-        ))
+        base_path = [guide_title, part_title] + ([s["heading"]] if s["heading"] else [])
+        full_body = clean(section_text(s))
+
+        # Normal case: one chunk per <h2> section.
+        if len(full_body) <= MAX_SECTION_CHARS:
+            chunks.append(
+                make_chunk(
+                    guide_slug, 
+                    part["slug"], 
+                    part_url, 
+                    base_path, 
+                    s["anchor"], 
+                    full_body
+                )
+            )
+            continue
+
+        for sub in s["subs"]:
+            if not sub["lines"]:
+                continue
+            path = base_path + ([sub["heading"]] if sub["heading"] else [])
+            chunks.append(make_chunk(
+                guide_slug,
+                part["slug"],
+                part_url,
+                path,
+                sub["anchor"] or s["anchor"],
+                clean("\n".join(sub["lines"]))
+            ))
     return chunks
 
 def main() -> None:

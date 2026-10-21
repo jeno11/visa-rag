@@ -146,7 +146,7 @@ def main() -> None:
         data = json.loads(raw_file.read_text())
         guide_slug = data["base_path"].strip("/")
         for part in data["details"]["parts"]:
-            all_chunks.extend(split_part(guide_slug, data["title"], part))
+            all_chunks.extend(split_part(guide_slug, data["title"].strip(), part))
 
     with OUT_PATH.open("w") as f:
         for c in all_chunks:

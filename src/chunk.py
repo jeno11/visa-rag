@@ -39,7 +39,7 @@ def element_to_text(el: Tag) -> str:
         for tr in el.find_all("tr"):
             cells = [c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])]
             rows.append(" | ".join(cells))
-            return "\n".join(rows)
+        return "\n".join(rows)
     return el.get_text(" ", strip=True)
 
 def new_section(heading: str | None, anchor: str | None) -> dict:
@@ -92,11 +92,11 @@ def split_part(guide_slug: str, guide_title: str, part: dict) -> list[Chunk]:
         if el.name == "h2":
             if has_text(current):
                 sections.append(current)
-            current = new_section(el.get_text(" ", strip=True), el.get("id"))
+            current = new_section(clean(el.get_text(" ", strip=True)), el.get("id"))
             continue
         if el.name == "h3":
             current["subs"].append({
-                "heading": el.get_text(" ", strip=True),
+                "heading": clean(el.get_text(" ", strip=True)),
                 "anchor": el.get("id"),
                 "lines": []
             })

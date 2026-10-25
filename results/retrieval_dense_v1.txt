@@ -1,0 +1,36 @@
+
+=== dense (bge-small): 31 questions ===
+hit@1: 58.1%  (18/31)
+hit@3: 87.1%  (27/31)
+hit@5: 90.3%  (28/31)
+MRR:    0.711
+    standard hit@5: 22/24
+    hard     hit@5: 6/7
+
+Misses / not at #1:
+    q04 (rank 5): How early can I fly to the UK before my course starts?
+    got #1: student-visa/overview#when-to-apply
+    q07 (rank 2): I'm Canadian. Do I have to take an English test for my Student visa?
+    got #1: student-visa/knowledge-of-english#intro
+    q08 (not in top 5): What English level do I need for a Student visa if I'm doing a degree?
+    got #1: student-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q11 (rank 2): How long can I stay in the UK with a Graduate visa?
+    got #1: graduate-visa/overview#intro
+    q13 (rank 2): Can I extend my Graduate visa when it runs out?
+    got #1: student-visa/extend-your-visa#intro
+    q14 (rank 2): Do I have to wait for my graduation ceremony before I apply for the Graduate visa?
+    got #1: graduate-visa/documents-youll-need-to-apply#when-youve-got-your-documents-ready
+    q17 (not in top 5): Can I go home for a holiday while my Graduate visa application is being processed?
+    got #1: graduate-visa/overview#eligibility
+    q18 (rank 3): What English test score do I need for a Skilled Worker visa?
+    got #1: skilled-worker-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q20 (rank 3): If I apply for a Skilled Worker visa from India, how long until I hear back?
+    got #1: skilled-worker-visa/switch-to-this-visa#how-long-it-takes-to-get-a-decision
+    q22 (rank 3): A different company offered me a job. Can I just move there on my Skilled Worker visa?
+    got #1: skilled-worker-visa/switch-to-this-visa#intro
+    q24 (rank 2): How much money does my wife need to show to join me on my Skilled Worker visa?
+    got #1: skilled-worker-visa/how-much-it-costs#intro
+    q26 (rank 3): What's the minimum salary I need to get a Skilled Worker visa?
+    got #1: skilled-worker-visa/when-you-can-be-paid-less#intro
+    q30 (not in top 5): Can I switch from my Student visa to a Skilled Worker visa before I finish my course?
+    got #1: skilled-worker-visa/switch-to-this-visa#intro

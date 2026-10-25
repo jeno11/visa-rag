@@ -1,0 +1,140 @@
+
+=== keyword (BM25): 31 questions ===
+hit@1: 51.6%  (16/31)
+hit@3: 67.7%  (21/31)
+hit@5: 80.6%  (25/31)
+MRR:    0.618
+    standard hit@5: 18/24
+    hard     hit@5: 7/7
+
+Misses / not at #1:
+    q03 (not in top 5): I'm already in the UK on another visa. How early can I apply for my Student visa?
+    got #1: student-visa/overview#how-long-you-can-stay
+    q06 (rank 2): How much money do I need in my bank account to study in Manchester?
+    got #1: skilled-worker-visa/how-much-it-costs#money-to-support-yourself
+    q07 (not in top 5): I'm Canadian. Do I have to take an English test for my Student visa?
+    got #1: student-visa/knowledge-of-english#passing-an-english-test
+    q09 (rank 4): My university sent me my CAS 7 months ago. Can I still use it to apply?
+    got #1: graduate-visa/documents-youll-need-to-apply#intro
+    q10 (rank 3): Can I do freelance work for my own clients while I'm on a Student visa?
+    got #1: skilled-worker-visa/second-job#voluntary-work
+    q13 (rank 4): Can I extend my Graduate visa when it runs out?
+    got #1: graduate-visa/apply#apply-for-a-graduate-visa
+    q16 (not in top 5): Can I start my own company while I'm on a Graduate visa?
+    got #1: graduate-visa/overview#how-long-you-can-stay
+    q17 (not in top 5): Can I go home for a holiday while my Graduate visa application is being processed?
+    got #1: graduate-visa/overview#eligibility
+    q19 (rank 2): How much savings do I need to show for a Skilled Worker visa?
+    got #1: skilled-worker-visa/overview#how-much-it-costs
+    q20 (not in top 5): If I apply for a Skilled Worker visa from India, how long until I hear back?
+    got #1: graduate-visa/overview#how-long-you-can-stay
+    q21 (rank 2): Can I have a weekend job on top of my sponsored job?
+    got #1: skilled-worker-visa/your-job#check-if-your-job-is-eligible
+    q24 (not in top 5): How much money does my wife need to show to join me on my Skilled Worker visa?
+    got #1: skilled-worker-visa/how-much-it-costs#money-to-support-yourself
+    q28 (rank 3): I'm on a Graduate visa. Can a company sponsor me for a Skilled Worker job that pays less than the normal minimum?
+    got #1: skilled-worker-visa/your-job#intro
+    q30 (rank 4): Can I switch from my Student visa to a Skilled Worker visa before I finish my course?
+    got #1: skilled-worker-visa/your-partner-and-children#apply-from-inside-the-uk-extend-or-switch-their-visa
+    q31 (rank 4): I'm from Malaysia. Do I need to show bank statements for my Student visa?
+    got #1: student-visa/money#money-to-support-yourself-financial-requirement
+
+=== dense (bge-small): 31 questions ===
+hit@1: 58.1%  (18/31)
+hit@3: 87.1%  (27/31)
+hit@5: 90.3%  (28/31)
+MRR:    0.711
+    standard hit@5: 22/24
+    hard     hit@5: 6/7
+
+Misses / not at #1:
+    q04 (rank 5): How early can I fly to the UK before my course starts?
+    got #1: student-visa/overview#when-to-apply
+    q07 (rank 2): I'm Canadian. Do I have to take an English test for my Student visa?
+    got #1: student-visa/knowledge-of-english#intro
+    q08 (not in top 5): What English level do I need for a Student visa if I'm doing a degree?
+    got #1: student-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q11 (rank 2): How long can I stay in the UK with a Graduate visa?
+    got #1: graduate-visa/overview#intro
+    q13 (rank 2): Can I extend my Graduate visa when it runs out?
+    got #1: student-visa/extend-your-visa#intro
+    q14 (rank 2): Do I have to wait for my graduation ceremony before I apply for the Graduate visa?
+    got #1: graduate-visa/documents-youll-need-to-apply#when-youve-got-your-documents-ready
+    q17 (not in top 5): Can I go home for a holiday while my Graduate visa application is being processed?
+    got #1: graduate-visa/overview#eligibility
+    q18 (rank 3): What English test score do I need for a Skilled Worker visa?
+    got #1: skilled-worker-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q20 (rank 3): If I apply for a Skilled Worker visa from India, how long until I hear back?
+    got #1: skilled-worker-visa/switch-to-this-visa#how-long-it-takes-to-get-a-decision
+    q22 (rank 3): A different company offered me a job. Can I just move there on my Skilled Worker visa?
+    got #1: skilled-worker-visa/switch-to-this-visa#intro
+    q24 (rank 2): How much money does my wife need to show to join me on my Skilled Worker visa?
+    got #1: skilled-worker-visa/how-much-it-costs#intro
+    q26 (rank 3): What's the minimum salary I need to get a Skilled Worker visa?
+    got #1: skilled-worker-visa/when-you-can-be-paid-less#intro
+    q30 (not in top 5): Can I switch from my Student visa to a Skilled Worker visa before I finish my course?
+    got #1: skilled-worker-visa/switch-to-this-visa#intro
+
+=== hybrid (RRF): 31 questions ===
+hit@1: 74.2%  (23/31)
+hit@3: 90.3%  (28/31)
+hit@5: 90.3%  (28/31)
+MRR:    0.806
+    standard hit@5: 22/24
+    hard     hit@5: 6/7
+
+Misses / not at #1:
+    q04 (rank 3): How early can I fly to the UK before my course starts?
+    got #1: student-visa/overview#when-to-apply
+    q07 (not in top 5): I'm Canadian. Do I have to take an English test for my Student visa?
+    got #1: student-visa/knowledge-of-english#passing-an-english-test
+    q08 (rank 3): What English level do I need for a Student visa if I'm doing a degree?
+    got #1: student-visa/knowledge-of-english#if-you-have-a-degree-from-a-uk-institution
+    q09 (rank 2): My university sent me my CAS 7 months ago. Can I still use it to apply?
+    got #1: graduate-visa/documents-youll-need-to-apply#intro
+    q16 (rank 2): Can I start my own company while I'm on a Graduate visa?
+    got #1: graduate-visa/overview#how-long-you-can-stay
+    q17 (not in top 5): Can I go home for a holiday while my Graduate visa application is being processed?
+    got #1: graduate-visa/overview#eligibility
+    q24 (rank 3): How much money does my wife need to show to join me on my Skilled Worker visa?
+    got #1: skilled-worker-visa/how-much-it-costs#intro
+    q30 (not in top 5): Can I switch from my Student visa to a Skilled Worker visa before I finish my course?
+    got #1: skilled-worker-visa/switch-to-this-visa#apply-to-switch-to-a-skilled-worker-visa
+
+=== dense, no query prefix: 31 questions ===
+hit@1: 54.8%  (17/31)
+hit@3: 83.9%  (26/31)
+hit@5: 90.3%  (28/31)
+MRR:    0.697
+    standard hit@5: 22/24
+    hard     hit@5: 6/7
+
+Misses / not at #1:
+    q04 (rank 5): How early can I fly to the UK before my course starts?
+    got #1: student-visa/overview#when-to-apply
+    q07 (rank 2): I'm Canadian. Do I have to take an English test for my Student visa?
+    got #1: student-visa/knowledge-of-english#intro
+    q08 (not in top 5): What English level do I need for a Student visa if I'm doing a degree?
+    got #1: student-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q11 (rank 2): How long can I stay in the UK with a Graduate visa?
+    got #1: graduate-visa/overview#intro
+    q13 (rank 2): Can I extend my Graduate visa when it runs out?
+    got #1: student-visa/extend-your-visa#intro
+    q14 (rank 2): Do I have to wait for my graduation ceremony before I apply for the Graduate visa?
+    got #1: graduate-visa/documents-youll-need-to-apply#when-youve-got-your-documents-ready
+    q17 (not in top 5): Can I go home for a holiday while my Graduate visa application is being processed?
+    got #1: graduate-visa/overview#when-to-apply
+    q18 (rank 3): What English test score do I need for a Skilled Worker visa?
+    got #1: skilled-worker-visa/knowledge-of-english#if-you-have-a-uk-school-qualification
+    q20 (rank 4): If I apply for a Skilled Worker visa from India, how long until I hear back?
+    got #1: skilled-worker-visa/switch-to-this-visa#how-long-it-takes-to-get-a-decision
+    q22 (rank 2): A different company offered me a job. Can I just move there on my Skilled Worker visa?
+    got #1: skilled-worker-visa/extend-your-visa#if-youve-changed-job-or-employer
+    q24 (rank 2): How much money does my wife need to show to join me on my Skilled Worker visa?
+    got #1: skilled-worker-visa/how-much-it-costs#intro
+    q26 (rank 3): What's the minimum salary I need to get a Skilled Worker visa?
+    got #1: skilled-worker-visa/when-you-can-be-paid-less#intro
+    q30 (not in top 5): Can I switch from my Student visa to a Skilled Worker visa before I finish my course?
+    got #1: skilled-worker-visa/switch-to-this-visa#apply-to-switch-to-a-skilled-worker-visa
+    q31 (rank 2): I'm from Malaysia. Do I need to show bank statements for my Student visa?
+    got #1: student-visa/documents-you-must-provide#intro

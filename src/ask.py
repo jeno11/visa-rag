@@ -20,7 +20,7 @@ def main() -> None:
     for question in sys.argv[1:]:
         chunks = retriever.search(question, k=5)
         result = generator.answer(question, chunks)
-        print(f"\nQ: {question}\n\n{result['answers']}\n")
+        print(f"\nQ: {question}\n\n{result['answer']}\n")
         for c in result["citations"]:
             print(f"    [{c['n']}] {c['title_path']}\n  {c['url']}")
         print(f"\n  Based on gov.uk guidance as of {date}. Not legal advice.")

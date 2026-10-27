@@ -19,6 +19,13 @@ Rules:
 - If a rule depends on a date (for example, when someone applies), state each case.
 - Keep the answer short: 2 to 5 sentences, in plain English."""
 
+CLOSED_BOOK_PROMPT = f"""You answer questions about UK visas from your own knowledge.
+
+Rules:
+- If you are not sure of the answer, reply exactly: "{NOT_FOUND}" Do not guess.
+- If a rule depends on a date (for example, when someone applies), state each case.
+- Keep the answer short: 2 to 5 sentences, in plain English."""
+
 class AnswerGenerator:
     def __init__(self, min_interval: float = 4.5, max_retries: int =5):
         self.client = OpenAI(
@@ -62,7 +69,14 @@ class AnswerGenerator:
             "url": chunks[n - 1]["url"],
         } for n in numbers if 1 <= n <= len(chunks)]
         return {
-            "answers": text,
+            "answer": text,
             "citations": citations,
             "not_found": NOT_FOUND in text
         }
+
+    def answer_without_context(self, question: str) -> dict:
+        text = self.__call([
+            {"role": "system", "content": CLOSED_BOOK_PROMPT},
+            {"role": "user", "content": question},
+        ])
+        return {"answer": text, "citations": [], "not_found": NOT_FOUND in text}

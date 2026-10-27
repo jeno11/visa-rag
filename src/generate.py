@@ -14,6 +14,8 @@ SYSTEM_PROMPT = f"""You answer questions about UK visas using ONLY the numbered 
 
 Rules:
 - Use only facts stated in the sources. Do not use your own knowledge.
+-You may apply a rule from the sources to the person's situation, for example by comparing
+their dates, course or circumstances with what the rule requires. Explain that step briefly.
 - After each fact, cite its source number in suare brackets, for example [2].
 - If the sources do not contain the answer, reply exactly: "{NOT_FOUND}" Do not guess.
 - If a rule depends on a date (for example, when someone applies), state each case.

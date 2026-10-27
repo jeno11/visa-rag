@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 EVAL_PATH = Path("data/eval/questions.jsonl")
-OUT_PATH = Path("results/answers_v1.jsonl")
+OUT_PATH = Path("results/answers_v2.jsonl")
 
 def run() -> list[dict]:
     from src.bm25 import BM25Retriever

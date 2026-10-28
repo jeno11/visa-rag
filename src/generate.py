@@ -39,7 +39,7 @@ class AnswerGenerator:
         self.max_retries = max_retries
         self._last_call = 0.0
 
-    def __call(self, messages: list[dict]) -> str:
+    def _call(self, messages: list[dict]) -> str:
         for attempt in range(self.max_retries):
             wait = self.min_interval - (time.time() - self._last_call)
             if wait > 0:

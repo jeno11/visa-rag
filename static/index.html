@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visa Guidance Assistant</title>
+<style>
+  :root {
+    --ink: #1f2328; --muted: #5b6470; --line: #d8dde3; --bg: #f7f8fa; --card: #ffffff;
+    --accent: #2f5d8a; --warn: #7a4f00; --warn-bg: #fff6e0; --warn-line: #f0d9a0; --err: #a1260d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         color: var(--ink); background: var(--bg); line-height: 1.55; }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  form { display: flex; gap: 8px; }
+  textarea { flex: 1; resize: vertical; min-height: 52px; padding: 12px; font: inherit;
+             color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+  button { font: inherit; cursor: pointer; }
+  #submit { padding: 0 20px; font-weight: 600; color: #fff; background: var(--accent);
+            border: 0; border-radius: 8px; }
+  #submit:disabled { opacity: .6; cursor: wait; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 24px; }
+  .examples button { padding: 6px 12px; font-size: .875rem; color: var(--accent);
+                     background: var(--card); border: 1px solid var(--line); border-radius: 999px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .card.notfound { background: var(--warn-bg); border-color: var(--warn-line); }
+  .card.notfound .answer { color: var(--warn); }
+  .answer { margin: 0 0 16px; white-space: pre-wrap; }
+  sup a { color: var(--accent); text-decoration: none; font-weight: 600; margin-left: 1px; }
+  ol { padding-left: 24px; margin: 0; }
+  ol li { margin-bottom: 6px; }
+  ol a { color: var(--accent); }
+  .meta { color: var(--muted); font-size: .875rem; margin: 16px 0 0; padding-top: 12px;
+          border-top: 1px solid var(--line); }
+  .error { color: var(--err); margin: 8px 0 0; }
+  [hidden] { display: none !important; }
+  @media (max-width: 520px) {
+    form { flex-direction: column; }
+    #submit { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>UK Visa Guidance Assistant</h1>
+  <p class="sub">Ask about Student, Graduate or Skilled Worker visas. Answers come only from a snapshot
+    of gov.uk guidance, with a link to the exact section each fact came from.</p>
+
+  <form id="ask-form">
+    <textarea id="question" maxlength="500"
+              placeholder="e.g. How much money do I need to study in Manchester?"></textarea>
+    <button type="submit" id="submit">Ask</button>
+  </form>
+  <p id="error" class="error" hidden></p>
+
+  <div class="examples" id="examples">
+    <button type="button">How much does a Graduate visa cost?</button>
+    <button type="button">Can my wife join me on a one-year taught master's?</button>
+    <button type="button">What's the minimum salary for a Skilled Worker visa?</button>
+  </div>
+
+  <section id="result" class="card" hidden>
+    <p id="answer" class="answer"></p>
+    <ol id="sources"></ol>
+    <p class="meta">Based on gov.uk guidance as of <span id="snapshot"></span>.
+      This is not legal advice: always check the linked gov.uk page before acting.</p>
+  </section>
+</main>
+
+<script>
+const form = document.getElementById("ask-form");
+const questionBox = document.getElementById("question");
+const submitBtn = document.getElementById("submit");
+const errorBox = document.getElementById("error");
+const result = document.getElementById("result");
+const answerBox = document.getElementById("answer");
+const sourcesList = document.getElementById("sources");
+const snapshot = document.getElementById("snapshot");
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+// "[1, 5]" in the answer becomes clickable [1][5] links to the source list
+function linkCitations(text) {
+  return escapeHtml(text).replace(/\[([\d,\s]+)\]/g, (_, nums) =>
+    "<sup>" + nums.split(",").map(n => n.trim()).filter(Boolean)
+      .map(n => `<a href="#source-${n}">[${n}]</a>`).join("") + "</sup>");
+}
+
+function showError(message) {
+  errorBox.textContent = message;
+  errorBox.hidden = false;
+}
+
+async function ask(question) {
+  errorBox.hidden = true;
+  if (question.trim().length < 3) {
+    showError("Please enter a question of at least 3 characters.");
+    return;
+  }
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Searching…";
+  result.hidden = true;
+  try {
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: question.trim() }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(typeof data.detail === "string"
+        ? data.detail : "Please check your question and try again.");
+    }
+    answerBox.innerHTML = linkCitations(data.answer);
+    result.classList.toggle("notfound", data.not_found);
+    sourcesList.innerHTML = data.citations.map(c =>
+      `<li id="source-${c.n}" value="${c.n}"><a href="${escapeHtml(c.url)}" target="_blank" rel="noopener">${escapeHtml(c.title_path)}</a></li>`
+    ).join("");
+    sourcesList.hidden = data.citations.length === 0;
+    snapshot.textContent = data.snapshot_date;
+    result.hidden = false;
+  } catch (err) {
+    showError(err.message || "Something went wrong. Please try again.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Ask";
+  }
+}
+
+form.addEventListener("submit", e => { e.preventDefault(); ask(questionBox.value); });
+
+// Enter sends the question; Shift+Enter adds a new line
+questionBox.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+});
+questionBox.addEventListener("input", () => { errorBox.hidden = true; });
+
+document.querySelectorAll("#examples button").forEach(btn =>
+  btn.addEventListener("click", () => { questionBox.value = btn.textContent; ask(btn.textContent); }));
+</script>
+</body>
+</html>

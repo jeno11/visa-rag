@@ -1,6 +1,7 @@
 """FastAPI service: POST /ask returns a grounded answer with gov.uk citations."""
 import logging
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.ask import snapshot_date
@@ -44,3 +45,5 @@ def ask(req: AskRequest):
         logger.exception("Answering failed for question: %r", req.question)
         raise HTTPException(status_code=502, detail="The answer service failed. Please try again.")
     return AskResponse(**result, snapshot_date=SNAPSHOT)
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

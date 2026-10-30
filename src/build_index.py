@@ -4,7 +4,7 @@ from pathlib import Path
 
 import chromadb
 
-from src.embeddings.local import LocalEmbeddingBackend
+from src.embeddings import get_backend
 
 CHUNKS_PATH = Path("data/chunks.jsonl")
 INDEX_DIR = "data/chroma"
@@ -15,7 +15,7 @@ def main() -> None:
 
     texts = [f"{c['title_path']}\n\n{c['body']}" for c in chunks]
 
-    backend = LocalEmbeddingBackend()
+    backend = get_backend()
     vectors = backend.embed_documents(texts)
 
     client = chromadb.PersistentClient(path=INDEX_DIR)

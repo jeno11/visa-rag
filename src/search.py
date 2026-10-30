@@ -3,11 +3,11 @@ import sys
 import chromadb
 
 from src.build_index import COLLECTION, INDEX_DIR
-from src.embeddings.local import LocalEmbeddingBackend
+from src.embeddings import get_backend
 
 class Retriever:
     def __init__(self, backend=None):
-        self.backend = backend or LocalEmbeddingBackend()
+        self.backend = backend or get_backend()
         client = chromadb.PersistentClient(path=INDEX_DIR)
         self.collection = client.get_collection(COLLECTION)
 

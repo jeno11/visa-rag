@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 
 from src.search import Retriever
-from src.embeddings.local import LocalEmbeddingBackend
 
 EVAL_PATH = Path("data/eval/questions.jsonl")
 KS = [1, 3, 5]
@@ -54,4 +53,3 @@ if __name__ == "__main__":
     evaluate(bm25, "keyword (BM25)")
     evaluate(dense, "dense (bge-small)")
     evaluate(HybridRetriever([bm25, dense]), "hybrid (RRF)")
-    evaluate(Retriever(LocalEmbeddingBackend(query_prefix="")), "dense, no query prefix")

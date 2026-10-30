@@ -1,4 +1,4 @@
-"""FastAPI service: POST / ask returns a grounded answer with gov.uk citations."""
+"""FastAPI service: POST /ask returns a grounded answer with gov.uk citations."""
 import logging
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field

@@ -4,9 +4,11 @@ import re
 import time
 
 from dotenv import load_dotenv
-from openai import OpenAI, RateLimitError
+from openai import OpenAI, RateLimitError, APIConnectionError, APITimeoutError, InternalServerError
 
 load_dotenv()
+# Errors worth retrying: they're usually gonr a few seconds later
+TRANSIENT_ERRORS = (RateLimitError, APIConnectionError, APITimeoutError, InternalServerError)
 
 NOT_FOUND = "I can't find this in the gov.uk guidance I have."
 
@@ -52,13 +54,13 @@ class AnswerGenerator:
                     temperature=0,
                 )
                 return resp.choices[0].message.content.strip()
-            except RateLimitError:
+            except TRANSIENT_ERRORS:
                 time.sleep(10 * (attempt + 1))
         raise RuntimeError("LLM rate limit: gave up after retries")
 
     def answer(self, question: str, chunks: list[dict]) -> dict:
         sources = "\n\n".join(f"[{i}] {c['title_path']}\n{c['body']}" for i, c in enumerate(chunks, start=1))
-        text = self.__call([
+        text = self._call([
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Sources:\n\n{sources}\n\nQuestion: {question}"},
         ])

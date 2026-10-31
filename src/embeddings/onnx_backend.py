@@ -1,4 +1,5 @@
 """Same bge-small model, run with ONNX runtime via fastembed: no PyTorch, much less memory."""
+import os
 import numpy as np
 from fastembed import TextEmbedding
 
@@ -14,7 +15,7 @@ class FastEmbedBackend(EmbeddingBackend):
             model_name: str = "BAAI/bge-small-en-v1.5",
             query_prefix: str = BGE_QUERY_PREFIX,
         ):
-        self.model = TextEmbedding(model_name)
+        self.model = TextEmbedding(model_name, cache_dir=os.getenv("FASTEMBED_CACHE_PATH"))
         self.query_prefix = query_prefix
 
     def embed_documents(self, texts: list[str]) -> np.ndarray:

@@ -1,0 +1,30 @@
+name: Docker build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t visa-rag .
+
+      - name: Start the container and check /health
+        run: |
+          docker run -d -p 8000:8000 --name app \
+            -e LLM_API_KEY=ci-dummy \
+            -e LLM_API_BASE_URL=https://example.invalid/ \
+            -e LLM_MODEL=none \
+            visa-rag
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health && exit 0
+            sleep 2
+          done
+          docker logs app
+          exit 1
